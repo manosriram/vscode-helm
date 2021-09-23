@@ -1,0 +1,43 @@
+#Creating MLflow deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.name}}-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{.Values.name}}-deployment
+  template:
+    metadata:
+      labels:
+        app: {{.Values.name}}-deployment
+    spec:
+      serviceAccountName: "deploy"
+      nodeSelector: 
+        topology.kubernetes.io/zone: us-west-2b
+      volumes:
+        - name: {{ .Values.pvcName }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.pvcName }}
+      containers:
+      - name: {{.Values.name}}-deployment
+        image: {{.Values.workspaceImage}}
+        # registry.gitlab.com/netbook-devs/netbook-workspaces/vscode-workspace:latest #the docker image from container registry
+        imagePullPolicy: IfNotPresent
+        env: #environment variables for persisting user preferences and data
+        - name: PORT
+          value: {{ .Values.port | quote }}
+        - name: WORK_SPACE
+          value: {{ .Values.workSpace | quote }}
+        - name: VSCODE_JSON
+          value: {{ .Values.vscodeJson | quote }}
+        - name: USER_DATA_DIR
+          value: {{ .Values.userdatadir | quote }}
+        - name: EXTENSIONS_DIR
+          value: {{ .Values.extensionsDir | quote }}
+        volumeMounts:
+        - name: {{ .Values.pvcName }}
+          mountPath: {{ .Values.pvcMountPath }} #should match with hostpath in pv
+      imagePullSecrets:
+      - name: gitlab-auth

@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  vscode-helm:
+  - apiVersion: v1
+    appVersion: 1.16.0
+    created: "2021-09-23T17:54:54.447994+05:30"
+    description: A Helm chart for Kubernetes
+    digest: 8b5a6c63d58869549651ebc176baba7d0eb06e877406a2c5e67be1e0c7e6eb7f
+    name: vscode-helm
+    type: application
+    urls:
+    - vscode-helm-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-09-23T17:54:54.434643+05:30"
